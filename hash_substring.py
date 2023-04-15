@@ -26,7 +26,7 @@ def getOccurrences(pttrn, txt):
     # this function finds the occurrences using Rabin Karp algorithm
     pNumber = 101
     base = 256
-    occur = []
+    
     pttrnH = 0
     txtH = 0
     
@@ -36,7 +36,8 @@ def getOccurrences(pttrn, txt):
     for i in range(len(pttrn)):
         pttrnH = (pttrnH * base + ord(pttrn[i])) % pNumber
         txtH = (txtH * base + ord(txt[i])) % pNumber
-
+    
+    occur = []
 
     for i in range(len(txt) - len(pttrn) + 1):
         if pttrnH == txtH:
