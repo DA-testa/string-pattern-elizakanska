@@ -1,32 +1,63 @@
 # python3
+# Elīza Kanska 221RDB095
 
-def read_input():
-    # this function needs to aquire input both from keyboard and file
-    # as before, use capital i (input from keyboard) and capital f (input from file) to choose which input type will follow
-    
-    
-    # after input type choice
-    # read two lines 
-    # first line is pattern 
-    # second line is text in which to look for pattern 
-    
-    # return both lines in one return
-    
-    # this is the sample return, notice the rstrip function
-    return (input().rstrip(), input().rstrip())
+def readInput(sourceFile=None):
+    # this funciotn reads the input data from the file or keyboard input
+    if sourceFile is not None:
+        try:
+            with open(f"./tests/{sourceFile}") as f:
+                data = f.readlines()
+        except FileNotFoundError:
+            raise ValueError("Data file not found")
+        except:
+            raise ValueError("Reading error")
 
-def print_occurrences(output):
-    # this function should control output, it doesn't need any return
+        pttrn = data[0].strip()
+        txt = data[1].strip()
+    else:
+        pttrn = input().rstrip()
+        txt = input().rstrip()
+
+    return pttrn, txt
+
+def printOccurrences(output):
+    # this function controls output, it doesn't need or have any return
     print(' '.join(map(str, output)))
 
-def get_occurrences(pattern, text):
-    # this function should find the occurances using Rabin Karp alghoritm 
+def getOccurrences(pttrn, txt):
+    # this function finds the occurrences using Rabin Karp algorithm
+    pNumber = 101
+    base = 256
+    occur = []
+    pttrnH = 0
+    txtH = 0
+    
+    for i in range(len(pttrn)):
+        pttrnH = (pttrnH * base + ord(pttrn[i])) % pNumber
+        txtH = (txtH * base + ord(txt[i])) % pNumber
 
-    # and return an iterable variable
-    return [0]
+    for i in range(len(txt) - len(pttrn) + 1):
+        if pttrnH == txtH:
+            if pttrn == txt[i:i+len(pttrn)]:
+                occur.append(i)
 
+        if i < len(txt) - len(pttrn):
+            txtH = ((txtH - ord(txt[i]) * (base**(len(pttrn)-1))) * base + ord(txt[i+len(pttrn)])) % pNumber
+
+    return occur
 
 # this part launches the functions
 if __name__ == '__main__':
-    print_occurrences(get_occurrences(*read_input()))
+    inSource = input().rstrip()
 
+    if inSource == 'I':
+        pttrn, txt = readInput()
+    elif inSource == 'F':
+        sourceFile = "06"
+        if str(sourceFile[-1]) == "a":
+            raise ValueError("Invalid filename")
+        pttrn, txt = readInput(sourceFile)
+    else:
+        raise ValueError("Invalid input source")
+
+    printOccurrences(getOccurrences(pttrn, txt))
