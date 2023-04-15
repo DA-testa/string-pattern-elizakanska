@@ -45,7 +45,6 @@ def getOccurrences(pttrn, txt):
 
     return occur
 
-
 # this part launches the functions
 if __name__ == '__main__':
     inSource = input().rstrip()
