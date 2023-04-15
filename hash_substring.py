@@ -10,11 +10,11 @@ def readInput(sourceFile=None):
         except:
             raise ValueError("Reading error")
 
-        txt = data[1].strip()
         pttrn = data[0].strip()
+        txt = data[1].strip()
     else:
-        txt = input().rstrip()
         pttrn = input().rstrip()
+        txt = input().rstrip()
 
     return pttrn, txt
 
@@ -26,18 +26,13 @@ def getOccurrences(pttrn, txt):
     # this function finds the occurrences using Rabin Karp algorithm
     pNumber = 101
     base = 256
-    
+    occur = []
     pttrnH = 0
     txtH = 0
     
-    if len(txt) < len(pttrn):
-        return []
-
     for i in range(len(pttrn)):
         pttrnH = (pttrnH * base + ord(pttrn[i])) % pNumber
         txtH = (txtH * base + ord(txt[i])) % pNumber
-    
-    occur = []
 
     for i in range(len(txt) - len(pttrn) + 1):
         if pttrnH == txtH:
