@@ -3,7 +3,7 @@
 def readInput(sourceFile=None):
     if sourceFile is not None:
         try:
-            with open(f"./data/{sourceFile}") as f:
+            with open(f"./tests/{sourceFile}") as f:
                 data = f.readlines()
         except FileNotFoundError:
             raise ValueError("Data file not found")
