@@ -29,6 +29,9 @@ def getOccurrences(pttrn, txt):
     occur = []
     pttrnH = 0
     txtH = 0
+    
+    if len(txt) < len(pttrn):
+    return []
 
     for i in range(len(pttrn)):
         pttrnH = (pttrnH * base + ord(pttrn[i])) % pNumber
