@@ -2,7 +2,7 @@
 # Elīza Kanska 221RDB095
 
 def readInput(sourceFile=None):
-    # this funciotn -causes headaches- reads the input data from the file or keyboard input
+    # this funciotn reads the input data from the file or keyboard input
     if sourceFile is not None:
         try:
             with open(f"./tests/{sourceFile}") as f:
