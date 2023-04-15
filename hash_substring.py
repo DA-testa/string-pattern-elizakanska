@@ -1,53 +1,63 @@
 # python3
 
-def read_input():
-    # this function acquires input both from keyboard and file
-    # as before, use capital i (input from keyboard) and capital f (input from file) to choose which input type will follow
-    
-    inType = input().rstrip()
-    
-    if inType == 'I':
-        pattern = input().rstrip()
-        text = input().rstrip()
-    elif inType == 'F':
-        # might need adjustments, will see when testing
-        filename = input().rstrip()
-        with open(filename) as file:
-            pattern = file.readline().rstrip()
-            text = file.readline().rstrip()
-    
-    # return both lines in one return
-    return (pattern, text)
+def readInput(sourceFile=None):
+    if sourceFile is not None:
+        try:
+            with open(f"./data/{sourceFile}") as f:
+                data = f.readlines()
+        except FileNotFoundError:
+            raise ValueError("Data file not found")
+        except:
+            raise ValueError("Reading error")
 
-def print_occurrences(output):
+        txt = data[1].strip()
+        pttrn = data[0].strip()
+    else:
+        txt = input().rstrip()
+        pttrn = input().rstrip()
+
+    return pttrn, txt
+
+def printOccurrences(output):
     # this function controls output, it doesn't need or have any return
     print(' '.join(map(str, output)))
 
-def get_occurrences(pattern, text):
+def getOccurrences(pttrn, txt):
     # this function finds the occurrences using Rabin Karp algorithm
-    
-    occurrences = []
-    
-    if len(pattern) > len(text):
-        return occurrences
-    
-    hash_pttrn = hash(pattern)
-    hash_txt = hash(text[:len(pattern)])
-    
-    if hash_pttrn == hash_txt and pattern == text[:len(pattern)]:
-        occurrences.append(0)
-    
-    prime = 2**31 - 1
-    h = pow(2, 8*(len(pattern)-1), prime) # 256^(m-1)
-    
-    for i in range(1, len(text)-len(pattern)+1):
-        hash_txt = ((hash_txt - ord(text[i-1])*h)*256 + ord(text[i+len(pattern)-1])) % prime
-        
-        if hash_txt == hash_pttrn and pattern == text[i:i+len(pattern)]:
-            occurrences.append(i)
-    
-    return occurrences
+    pNumber = 101
+    base = 256
+    occur = []
+    pttrnH = 0
+    txtH = 0
+
+    for i in range(len(pttrn)):
+        pttrnH = (pttrnH * base + ord(pttrn[i])) % pNumber
+        txtH = (txtH * base + ord(txt[i])) % pNumber
+
+
+    for i in range(len(txt) - len(pttrn) + 1):
+        if pttrnH == txtH:
+            if pttrn == txt[i:i+len(pttrn)]:
+                occur.append(i)
+
+        if i < len(txt) - len(pttrn):
+            txtH = ((txtH - ord(txt[i]) * (base**(len(pttrn)-1))) * base + ord(txt[i+len(pttrn)])) % pNumber
+
+    return occur
+
 
 # this part launches the functions
 if __name__ == '__main__':
-    print_occurrences(get_occurrences(*read_input()))
+    inSource = input().rstrip()
+
+    if inSource == 'I':
+        pttrn, txt = readInput()
+    elif inSource == 'F':
+        sourceFile = "06"
+        if str(sourceFile[-1]) == "a":
+            raise ValueError("Invalid filename")
+        pttrn, txt = readInput(sourceFile)
+    else:
+        raise ValueError("Invalid input source")
+
+    printOccurrences(getOccurrences(pttrn, txt))
